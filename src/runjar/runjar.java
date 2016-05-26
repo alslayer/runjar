@@ -67,10 +67,12 @@ public class runjar {
 		Constructor<?> constructor = beanClass.getConstructor();
 		Object beanObj = constructor.newInstance();
 		// Getting a method from the loaded class and invoke it
-		Method method = beanClass.getMethod("test");
-		method.invoke(beanObj);
+//		Method method = beanClass.getMethod("test");
+//		method.invoke(beanObj);;
 
-		
+		JUnitCore junit = new JUnitCore();
+		Result result = junit.run(beanClass);
+		System.out.println(result.wasSuccessful());
 	}
 
 	@Test
