@@ -4,8 +4,11 @@ package runjar;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Scanner;
 
 import org.junit.Test;
@@ -16,6 +19,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
+import junit.framework.TestResult;
+import junit.textui.TestRunner;
 
 public class runjar {
 
@@ -23,7 +28,7 @@ public class runjar {
 	static File nodeHome = new File("C:/Work/Appium/Appium");
 	static File appiumHome = new File("C:/Work/Appium/Appium/node_modules/appium");
 	
-	public static void main(String[] args) {
+	public static void main(String[] args)throws Exception {
 		// TODO Auto-generated method stub
 
 //		String DeviceId = "0915f940d8211d04"; //Samsung Note 5
@@ -38,10 +43,34 @@ public class runjar {
 //		}
 		
 		
-		//New run junit code
-		JUnitCore junit = new JUnitCore();
-		Result result = junit.run(runAppiumTest.class);  //Run appium test here
-		System.out.println(result.wasSuccessful());
+//		//New run junit code - works good time to move on.
+//		JUnitCore junit = new JUnitCore();
+//		Result result = junit.run(runAppiumTest.class);  //Run appium test here
+//		System.out.println(result.wasSuccessful());
+		
+		
+
+//		URL url = new URL("file:///c:/Work/runAppiumTest.jar");
+//		URLClassLoader loader = new URLClassLoader(new URL[]{url});
+//		loader.loadClass("runjar.runAppiumTest");
+//		TestRunner runner = new TestRunner();
+//		TestResult result = runner.start(new String[]{"runjar.runAppiumTest"});
+//		System.out.println(result.toString());
+		
+		// Getting the jar URL which contains target class
+		URL[] classLoaderUrls = new URL[]{new URL("file:///c:/Work/runAppiumTest.jar")};
+		 // Create a new URLClassLoader
+		URLClassLoader urlClassLoader = new URLClassLoader(classLoaderUrls);
+		 // Load the target class
+		Class<?> beanClass = urlClassLoader.loadClass("runjar.runAppiumTest");
+		// Create a new instance from the loaded class
+		Constructor<?> constructor = beanClass.getConstructor();
+		Object beanObj = constructor.newInstance();
+		// Getting a method from the loaded class and invoke it
+		Method method = beanClass.getMethod("test");
+		method.invoke(beanObj);
+
+		
 	}
 
 	@Test
