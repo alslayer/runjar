@@ -14,6 +14,7 @@ import java.util.Scanner;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.appium.java_client.android.AndroidDriver;
@@ -28,6 +29,7 @@ public class runjar {
 	static File nodeHome = new File("C:/Work/Appium/Appium");
 	static File appiumHome = new File("C:/Work/Appium/Appium/node_modules/appium");
 	
+	@SuppressWarnings("resource")
 	public static void main(String[] args)throws Exception {
 		// TODO Auto-generated method stub
 
@@ -58,21 +60,43 @@ public class runjar {
 //		System.out.println(result.toString());
 		
 		// Getting the jar URL which contains target class
-		URL[] classLoaderUrls = new URL[]{new URL("file:///c:/Work/runAppiumTest.jar")};
-		 // Create a new URLClassLoader
+		URL[] classLoaderUrls = new URL[]{new URL("file:///c:/Work/simpleappiumtest2.jar"),
+				new URL("file:///c:/Work/simpleappiumtest2.jar")};
+		//Code to run junit test
 		URLClassLoader urlClassLoader = new URLClassLoader(classLoaderUrls);
 		 // Load the target class
-		Class<?> beanClass = urlClassLoader.loadClass("runjar.runAppiumTest");
-		// Create a new instance from the loaded class
-		Constructor<?> constructor = beanClass.getConstructor();
-		Object beanObj = constructor.newInstance();
-		// Getting a method from the loaded class and invoke it
-//		Method method = beanClass.getMethod("test");
-//		method.invoke(beanObj);;
-
+		Class<?> appiumClass = urlClassLoader.loadClass("simpleapp.simpleappium");
+		// Run the class using JUnitCore
 		JUnitCore junit = new JUnitCore();
-		Result result = junit.run(beanClass);
+		Result result = junit.run(appiumClass);
+		//Display if test was successful
 		System.out.println(result.wasSuccessful());
+		
+		System.out.println("Tests run: " + result.getRunCount());
+		System.out.println("Tests failed: " + result.getFailureCount());
+        for (Failure failure : result.getFailures()) {
+        	System.out.println("Failure: " + failure.toString());
+        	System.out.println("Failure desc: " + failure.getDescription());
+        	System.out.println("Failure excp: " + failure.getException());
+        	System.out.println("Failure trace: " + failure.getTrace());
+        }
+		
+		
+////		Code to run app not test
+//		//Create a new URLClassLoader
+//		URLClassLoader urlClassLoader = new URLClassLoader(classLoaderUrls);
+//		// Load the target class
+//		Class<?> beanClass = urlClassLoader.loadClass("simpleapp.simpleappium");
+//		// Create a new instance from the loaded class
+//		Constructor<?> constructor = beanClass.getConstructor();
+//		Object beanObj = constructor.newInstance();
+//		// Getting a method from the loaded class and invoke it
+//		Method method = beanClass.getMethod("test");
+//		method.invoke(beanObj);
+
+		
+		
+
 	}
 
 	@Test
